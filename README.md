@@ -2,15 +2,15 @@
 Project of creating FAIR longwave datasets by storing them in a NetCDF file
 
 ## FRAMEWORK OVERVIEW
-TemplateCatalogue
+- TemplateCatalogue
   -> selects variables
-VariableCatalogue
+- VariableCatalogue
   -> defines metadata and source variable names
-DimensionCatalogue
+- DimensionCatalogue
   -> defines dimensions and lengths
-create_longwave_structure
+- create_longwave_structure
   -> assembles the dataset description
-ncSavVarFil
+- ncSavVarFil
   -> writes the NetCDF file
   
 ## INPUTS:
