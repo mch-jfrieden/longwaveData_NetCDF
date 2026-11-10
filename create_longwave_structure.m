@@ -150,6 +150,7 @@ function create_longwave_structure(fn_netCDF, VarNames, TimeMin, TimeMax)
         end
         Var.Val2Save = Data;
         Var.Dimensions = dimids;
+        Var = rmfield(Var,'Coordinates');
         Var = rmfield(Var,'SourceName');
         nc_VarSchema(i) = Var;
     end
