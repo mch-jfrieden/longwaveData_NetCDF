@@ -6,6 +6,7 @@ arguments
     dataSizeRaw {mustBeInteger} = 0
 end
 
+%To select only once a day instead of midnight and noon
 dataSizeRawHalf = int32(dataSizeRaw / 2.);
 
 DimVec.TimeRaw = struct( ...

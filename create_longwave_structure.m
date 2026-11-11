@@ -94,8 +94,10 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
     end
     
     if ~isempty(Instrument)
-        nc_gen_Attributes(13).Name  = 'Instrument';
-        nc_gen_Attributes(13).Value = Instrument;
+        AttrNames = {nc_gen_Attributes.Name};
+        idx = strcmp(AttrNames,'Instruments');
+        nc_gen_Attributes(idx).Name = 'Instrument';
+        nc_gen_Attributes(idx).Value = Instrument;
     end
 
 
@@ -124,32 +126,39 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
     if any(strcmp(NameValues, 'time'))
         TimeA = DataValuesStruct.time;
         Cond = TimeA < TimeMax & TimeA > TimeMin;
-        nVal = length(TimeA(Cond));
+        nVal = numel(TimeA(Cond));
         TimeFiltered = TimeA(Cond);
     end
     if any(strcmp(NameValues, 'TimeRaw'))
         TimeARaw = DataValuesStruct.TimeRaw;
         CondRaw = TimeARaw < TimeMax & TimeARaw > TimeMin;
-        nValRaw = length(TimeARaw(CondRaw));
+        nValRaw = numel(TimeARaw(CondRaw));
         TimeFiltered = TimeARaw(CondRaw);
         integerMask = mod(TimeARaw, 1) == 0;
         temp = DataValuesStruct.TimeRaw;
         TimeARawHalf = temp(integerMask);
         CondRawHalf = TimeARawHalf < TimeMax & TimeARawHalf > TimeMin;
     end
-%     TimeA = ncread(pathToFile, 'time');
 
     refDate = datetime(2000, 1, 1);
     dt = refDate + days(TimeFiltered);
     dt.Format = 'dd-MMM-yyyy hh:mm:ss';
-    nc_gen_Attributes(16).Value = char(dt(1));
-    nc_gen_Attributes(17).Value = char(dt(end));
+    AttrNames = {nc_gen_Attributes.Name};
+    idxS = strcmp(AttrNames,'Time coverage start');
+    nc_gen_Attributes(idxS).Value = char(dt(1));
+    idxE = strcmp(AttrNames,'Time coverage end');
+    nc_gen_Attributes(idxE).Value = char(dt(end));
     currentDT = datetime('now');
-    nc_gen_Attributes(18).Value = char(currentDT);
+    idxC = strcmp(AttrNames, 'Creation date');
+    nc_gen_Attributes(idxC).Value = char(currentDT);
 
 
     %% Load the dimension catalogue
     DimVec = getDimensions(nVal, nValRaw);
+    DimMask.Time        = Cond;
+    DimMask.TimeRaw     = CondRaw;
+    DimMask.TimeRawHalf = CondRawHalf;
+    DimMask.Coef        = [];
 
     %% Load the common variable catalogue for longwave analysis
     catVarsVec = getVariableCatalogue();
@@ -168,19 +177,27 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
         Var = catVarsVec.(VarNames{i});
         Var.Size = dimids.Length;
 %         temp = ncread(pathToFile, catVarsVec.(VarNames{i}).SourceName);
-        temp = DataValuesStruct.(catVarsVec.(VarNames{i}).SourceName);
+        SrcName = catVarsVec.(VarNames{i}).SourceName;
+        assert( isfield(DataValuesStruct,SrcName), 'Source variable "%s" is missing.', SrcName);
+        temp = DataValuesStruct.(SrcName);
 
         % Time-dependent variables are cropped to the selected temporal
         % interval. Static variables are kept unchanged.
-        if strcmpi(DimVec.(VarDims).Name, 'Time')
-            Data = temp(Cond);
-        elseif strcmp(DimVec.(VarDims).Name, 'TimeRaw')
-            Data = temp(CondRaw);
-        elseif strcmp(DimVec.(VarDims).Name, 'TimeRawHalf')
-            Data = temp(CondRawHalf);
-        else
+        Mask = DimMask.(VarDims);
+        if isempty(Mask)
             Data = temp;
+        else
+            Data = temp(Mask);
         end
+%         if
+%             Data = temp(Cond);
+%         elseif strcmp(DimVec.(VarDims).Name, 'TimeRaw')
+%             Data = temp(CondRaw);
+%         elseif strcmp(DimVec.(VarDims).Name, 'TimeRawHalf')
+%             Data = temp(CondRawHalf);
+%         else
+%             Data = temp;
+%         end
         Var.Val2Save = Data;
         Var.Dimensions = dimids;
         Var = rmfield(Var,'Coordinates');

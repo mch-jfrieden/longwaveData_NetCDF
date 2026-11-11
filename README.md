@@ -37,8 +37,8 @@ Assumption:
 Assumption:
   Variables on dimension "Coef" are static regression coefficients and must not be temporally subsetted.
   
-Time variable is expressed in number of days since 2000-01-01 00:00
-  TimeMin in dataset = 4295.0
+Time variable is expressed in number of days since 2000-01-01 00:00  
+  TimeMin in dataset = 4295.0  
   TimeMax in dataset = 9554.5
   
 ## Example: 
