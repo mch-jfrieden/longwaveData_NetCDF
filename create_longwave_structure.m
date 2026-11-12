@@ -3,39 +3,48 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
     %
     % FRAMEWORK OVERVIEW
     %
-    % TemplateCatalogue
-    %     -> selects variables
+    % getTemplateCatalogue.m
+    %     -> selects variable name templates
     %
-    % VariableCatalogue
-    %     -> defines metadata and source variable names
+    % getVariableCatalogue.m
+    %     -> contains the variable description and metadata specific for 
+    %    atmospheric longwave radiation studies
     %
-    % DimensionCatalogue
+    % getGlobalMetadata.m
+    %     -> contains the global metadata attributes specific for the
+    %     atmospheric longwave radiation study at the Payerne station
+    %
+    % getDimensionCatalogue.m
     %     -> defines dimensions and lengths
     %
-    % create_longwave_structure
-    %     -> assembles the dataset description
-    %
-    % ncSavVarFil
+    % ncSavVarFil.m
     %     -> writes the NetCDF file
     %
+    % create_longwave_structure.m
+    %     -> assembles the dataset by calling all the scripts and
+    %     associates the data values to each variable before writing the
+    %     NetCDF file
     %
     %
-    % INPUTS:
+    % INPUT ARGUMENTS FOR create_longwave_structure.m:
     %   - fn_netCDF : must be char with the filename of the netCDF file
     %   - VarNames  : an array of char containing the name of the variables 
     %   - DataValues: must be char with the filename containing a structure
     %   called "DataValuesStruct" that contains data values of the mentioned 
     %   variables in varNames
-    %   - TimeMin   : Start time in number of days since 2000-01-01 00:00
-    %   - TimeMax   : End time in number of days since 2000-01-01 00:00
+    %   - TimeMin   : Start time in datetime format (1st available 05-OCT-2011 00:00)
+    %   - TimeMax   : End time in datetime format (Last available 27-FEB-2026 12:00)
+    %
     %
     % Possibilities for VarNames are:
-    % TimeRaw, LwdInst1Raw, LwdInst2Raw, SwDiffuseRaw, SwDirectRaw, SwGlobalRaw, ClearSkyFlag, Time, 
-    % Temperature, ProfileSurfaceTemp, TemperatureGradient, ProfileSurfacePres, LwdInst1, 
-    % LwdInst2, water_vapor, SwDiffuse, SwDirect, SwGlobal, LibRadtranDLR, ParameterizedDLR, 
-    % LwdInst1CorrectedIWV, LwdInst2CorrectedIWV, LwdInst1CorrectedSWDif, LwdInst2CorrectedSWDif, LwdInst1CorrectedIWVSWDif, 
-    % LwdInst2CorrectedIWVSWDif, SWDifCorrectionCoefDay, SWDifCorrectionCoefDaySE, SWDifCorrectionCoefAll, 
-    % SWDifCorrectionCoefAllSE, IWVCorrectionCoef, IWVCorrectionCoefSE
+    % TimeRaw, LwdInst1Raw, LwdInst2Raw, SwDiffuseRaw, SwDirectRaw, SwGlobalRaw, 
+    % ClearSkyFlag, Time, Temperature, ProfileSurfaceTemp, TemperatureGradient, 
+    % ProfileSurfacePres, LwdInst1, LwdInst2, water_vapor, SwDiffuse, SwDirect, 
+    % SwGlobal, LibRadtranDLR, ParameterizedDLR, LwdInst1CorrectedIWV, 
+    % LwdInst2CorrectedIWV, LwdInst1CorrectedSWDif, LwdInst2CorrectedSWDif, 
+    % LwdInst1CorrectedIWVSWDif, LwdInst2CorrectedIWVSWDif, SWDifCorrectionCoefDay, 
+    % SWDifCorrectionCoefDaySE, SWDifCorrectionCoefAll, SWDifCorrectionCoefAllSE, 
+    % IWVCorrectionCoef, IWVCorrectionCoefSE
     %
     % The following templates of variables can be called for example
     % VarNames = {'all'} will load the template vector
@@ -52,11 +61,6 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
     % Variables on dimension "Coef" are static regression
     % coefficients and must not be temporally subsetted.
     %
-    %
-    %
-    % Time variable is expressed in number of days since 2000-01-01 00:00
-    % TimeMin in dataset = 4295.0
-    % TimeMax in dataset = 9554.5
     %
     % For example: 
     % create_longwave_structure('nameFile.nc', {'Time' 'Temperature'}, 'longwaveDataStruct.mat')
@@ -76,8 +80,8 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
         fn_netCDF {mustBeTextScalar}
         VarNames cell {mustBeNonzeroLengthText, mustBeText}
         DataValues {mustBeTextScalar}
-        TimeMin double {mustBeNumeric} = 4000.
-        TimeMax double {mustBeNumeric} = 10000.
+        TimeMin datetime  = '05-OCT-2011 00:00'
+        TimeMax datetime  = '27-FEB-2026 12:00'
     end
 
 
@@ -120,27 +124,33 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
     nValRaw = 0;
     nVal = 0;
     TimeFiltered = 0.;
-    Cond = 0.;
-    CondRaw = 0.;
+    Cond = 0;
+    CondRaw = 0;
     CondRawHalf = 0;
-    if any(strcmp(NameValues, 'time'))
-        TimeA = DataValuesStruct.time;
-        Cond = TimeA < TimeMax & TimeA > TimeMin;
+    refDate = datetime(2000, 1, 1);
+    if any(strcmp(NameValues, 'Time'))
+        TimeA = DataValuesStruct.Time;
+        dtA = refDate + days(TimeA);
+        dtA.Format = 'dd-MMM-yyyy hh:mm:ss';
+        Cond = dtA < TimeMax & dtA > TimeMin;
         nVal = numel(TimeA(Cond));
         TimeFiltered = TimeA(Cond);
     end
     if any(strcmp(NameValues, 'TimeRaw'))
         TimeARaw = DataValuesStruct.TimeRaw;
-        CondRaw = TimeARaw < TimeMax & TimeARaw > TimeMin;
+        dtARaw = refDate + days(TimeARaw);
+        dtARaw.Format = 'dd-MMM-yyyy hh:mm:ss';
+        CondRaw = dtARaw < TimeMax & dtARaw > TimeMin;
         nValRaw = numel(TimeARaw(CondRaw));
         TimeFiltered = TimeARaw(CondRaw);
         integerMask = mod(TimeARaw, 1) == 0;
         temp = DataValuesStruct.TimeRaw;
         TimeARawHalf = temp(integerMask);
-        CondRawHalf = TimeARawHalf < TimeMax & TimeARawHalf > TimeMin;
+        dtARawHalf = refDate + days(TimeARawHalf);
+        dtARawHalf.Format = 'dd-MMM-yyyy hh:mm:ss';
+        CondRawHalf = dtARawHalf < TimeMax & dtARawHalf > TimeMin;
     end
 
-    refDate = datetime(2000, 1, 1);
     dt = refDate + days(TimeFiltered);
     dt.Format = 'dd-MMM-yyyy hh:mm:ss';
     AttrNames = {nc_gen_Attributes.Name};
@@ -154,7 +164,7 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
 
 
     %% Load the dimension catalogue
-    DimVec = getDimensions(nVal, nValRaw);
+    DimVec = getDimensionCatalogue(nVal, nValRaw);
     DimMask.Time        = Cond;
     DimMask.TimeRaw     = CondRaw;
     DimMask.TimeRawHalf = CondRawHalf;
@@ -170,16 +180,24 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
     % Loop over all variables in VarNames to finalise their definition and
     % include them in the NetCDF structure
     for i = 1:numel(VarNames)
-        assert( isfield(catVarsVec,VarNames{i}), 'Variable "%s" not found in catalogue.', VarNames{i});
+        if ~any(strcmp(fieldnames(catVarsVec), VarNames{i}))
+            disp("Variable "+VarNames{i}+" was not found in catalogue");
+            Data = DataValuesStruct.(VarNames{i});
+            DimVec.(VarNames{i}) = struct('Name', VarNames{i} , 'Length',    { numel(Data) }, 'Unlimited', { false } );
+            catVarsVec.(VarNames{i}).Name                  = VarNames{i};
+            catVarsVec.(VarNames{i}).Datatype              = 'double';
+            catVarsVec.(VarNames{i}).Attributes            = struct('Name', {'long_name'}, 'Value', { VarNames{i} } );
+            catVarsVec.(VarNames{i}).Dimensions            = VarNames{i};
+            catVarsVec.(VarNames{i}).Coordinates           = VarNames{i};
+            DimMask.(VarNames{i})                          = [];
+            fprintf("WARNING: Variable "+VarNames{i}+" was added to be saved in the NetCDF file with its own dimension, but without specifying Attributes! \n" + ...
+                " -> The precision of the attributes is left to the customer. \n");
+        end
         VarDims = catVarsVec.(VarNames{i}).Dimensions;
-        assert( isfield(DimVec,VarDims), 'Dimension "%s" not found in catalogue.', VarDims);
         dimids = DimVec.(VarDims);
         Var = catVarsVec.(VarNames{i});
         Var.Size = dimids.Length;
-%         temp = ncread(pathToFile, catVarsVec.(VarNames{i}).SourceName);
-        SrcName = catVarsVec.(VarNames{i}).SourceName;
-        assert( isfield(DataValuesStruct,SrcName), 'Source variable "%s" is missing.', SrcName);
-        temp = DataValuesStruct.(SrcName);
+        temp = DataValuesStruct.(VarNames{i});
 
         % Time-dependent variables are cropped to the selected temporal
         % interval. Static variables are kept unchanged.
@@ -189,23 +207,14 @@ function create_longwave_structure(fn_netCDF, VarNames, DataValues, TimeMin, Tim
         else
             Data = temp(Mask);
         end
-%         if
-%             Data = temp(Cond);
-%         elseif strcmp(DimVec.(VarDims).Name, 'TimeRaw')
-%             Data = temp(CondRaw);
-%         elseif strcmp(DimVec.(VarDims).Name, 'TimeRawHalf')
-%             Data = temp(CondRawHalf);
-%         else
-%             Data = temp;
-%         end
         Var.Val2Save = Data;
         Var.Dimensions = dimids;
         Var = rmfield(Var,'Coordinates');
-        Var = rmfield(Var,'SourceName');
         nc_VarSchema(i) = Var;
     end
 
     %% Write the NetCDF file
     ncSavVarFil( fn_netCDF, nc_VarSchema, 'Attributes', nc_gen_Attributes );
+    disp(fn_netCDF+" was successfully created and saved!")
 
 end

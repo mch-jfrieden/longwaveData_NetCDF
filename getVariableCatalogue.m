@@ -10,10 +10,9 @@ function VarCatalogue = getVariableCatalogue()
         'Value', { 'time'...
         'time associated to raw data'...
         'days since 2000-01-01 00:00:00' ...
-        'Timestamps of raw data in days since 2000-01-01 00:00:00, either at noon or at midnight'} );
+        'Timestamps of raw data (before filtering for only clear-sky data) in days since 2000-01-01 00:00:00'} );
     VarCatalogue.TimeRaw.Dimensions            = 'TimeRaw';
     VarCatalogue.TimeRaw.Coordinates           = 'TimeRaw';
-    VarCatalogue.TimeRaw.SourceName            = 'TimeRaw';
 
     %% Variable LwdInst1Raw
     VarCatalogue.LwdInst1Raw.Name                  = 'LwdInst1Raw';
@@ -22,12 +21,11 @@ function VarCatalogue = getVariableCatalogue()
          'Value' , {'surface_net_downward_longwave_flux' ...
          'Surface downwelling longwave irradiance measured by instrument 1', ...
          'W m-2' ...
-         'Average downward longwave irradiance emitted by atmospheric gases and aerosols and received at the Earth surface, measured by instrument 1.' ...
+         'Average downward longwave irradiance emitted by the atmosphere to the Earth surface measured by instrument 1.' ...
          'Average computed from thirty 60-second measurements acquired during the radiosounding period.' ...
          'Pyrgeometer Eppley PIR'} );
     VarCatalogue.LwdInst1Raw.Dimensions            = 'TimeRaw';
     VarCatalogue.LwdInst1Raw.Coordinates           = 'TimeRaw';
-    VarCatalogue.LwdInst1Raw.SourceName            = 'Lwd1AvgRaw';
 
     %% Variable LwdInst2Raw
     VarCatalogue.LwdInst2Raw.Name              = 'LwdInst2Raw';
@@ -36,12 +34,11 @@ function VarCatalogue = getVariableCatalogue()
          'Value', {'surface_net_downward_longwave_flux' ...
          'Surface downwelling longwave irradiance measured by instrument 2' ...
          'W m-2' ...
-         'Average downward longwave irradiance emitted by atmospheric gases and aerosols and received at the Earth surface, measured by instrument 2.' ...
+         'Average downward longwave irradiance emitted by the atmosphere to the Earth surface measured by instrument 2.' ...
          'Average computed from thirty 60-second measurements acquired during the radiosounding period.' ...
          'Pyrgeometer Kipp & Zonen CG4'} );
     VarCatalogue.LwdInst2Raw.Dimensions         = 'TimeRaw';
     VarCatalogue.LwdInst2Raw.Coordinates        = 'TimeRaw';
-    VarCatalogue.LwdInst2Raw.SourceName         = 'Lwd2AvgRaw';
 
     %% Variable SwDiffuseRaw
     VarCatalogue.SwDiffuseRaw.Name             = 'SwDiffuseRaw';
@@ -54,7 +51,6 @@ function VarCatalogue = getVariableCatalogue()
          'Average computed from thirty 60-second measurements acquired during the radiosounding period.'} );
     VarCatalogue.SwDiffuseRaw.Dimensions       = 'TimeRaw';
     VarCatalogue.SwDiffuseRaw.Coordinates      = 'TimeRaw';
-    VarCatalogue.SwDiffuseRaw.SourceName       = 'SWdfAvgRaw';
 
     %% Variable SwDirectRaw
     VarCatalogue.SwDirectRaw.Name             = 'SwDirectRaw';
@@ -67,7 +63,6 @@ function VarCatalogue = getVariableCatalogue()
         'Average computed from thirty 60-second measurements acquired during the radiosounding period.'} );
     VarCatalogue.SwDirectRaw.Dimensions       = 'TimeRaw';
     VarCatalogue.SwDirectRaw.Coordinates      = 'TimeRaw';
-    VarCatalogue.SwDirectRaw.SourceName       = 'SWdrAvgRaw';
 
     %% Variable SwGlobalRaw
     VarCatalogue.SwGlobalRaw.Name             = 'SwGlobalRaw';
@@ -80,7 +75,6 @@ function VarCatalogue = getVariableCatalogue()
         'Average computed from thirty 60-second measurements acquired during the radiosounding period.'} );
     VarCatalogue.SwGlobalRaw.Dimensions       = 'TimeRaw';
     VarCatalogue.SwGlobalRaw.Coordinates      = 'TimeRaw';
-    VarCatalogue.SwGlobalRaw.SourceName       = 'SWglAvgRaw';
 
     %% Variable ClearSkyFlag
     VarCatalogue.ClearSkyFlag.Name             = 'ClearSkyFlag';
@@ -92,7 +86,6 @@ function VarCatalogue = getVariableCatalogue()
         'The flag is determined based on three conditions: 1) Satellite flag is clear-sky, 2) Max relative humidity profile < 90%, and 3) Temperature profile is relatively smooth.'} );
     VarCatalogue.ClearSkyFlag.Dimensions       = 'TimeRawHalf';
     VarCatalogue.ClearSkyFlag.Coordinates      = 'TimeRawHalf';
-    VarCatalogue.ClearSkyFlag.SourceName       = 'CS_days';
 
     %% Variable Time
     VarCatalogue.Time.Name                  = 'Time';
@@ -101,10 +94,9 @@ function VarCatalogue = getVariableCatalogue()
         'Value', { 'time'...
         'time'...
         'days since 2000-01-01 00:00:00' ...
-        'Timestamp in days since 2000-01-01 00:00:00, either at noon or at midnight'} );
+        'Timestamps for clear-sky data in days since 2000-01-01 00:00:00'} );
     VarCatalogue.Time.Dimensions            = 'Time';
     VarCatalogue.Time.Coordinates           = 'Time';
-    VarCatalogue.Time.SourceName            = 'time';
 
     %% Variable Temperature
     VarCatalogue.Temperature.Name          = 'Temperature';
@@ -113,32 +105,29 @@ function VarCatalogue = getVariableCatalogue()
         'Value' , {'air_temperature' ...
         'Surface air temperature', ...
         'K' ...
-        'Surface air temperature measured by the instrument in Payerne at 2m from the surface'} );
+        'Surface air temperature measured by the Payerne station at 2m from the surface'} );
     VarCatalogue.Temperature.Dimensions    = 'Time';
     VarCatalogue.Temperature.Coordinates   = 'Time';
-    VarCatalogue.Temperature.SourceName    = 'temperature';
 
     %% Variable ProfileSurfaceTemp
     VarCatalogue.ProfileSurfaceTemp.Name           = 'ProfileSurfaceTemp';
     VarCatalogue.ProfileSurfaceTemp.Datatype       = 'double';
     VarCatalogue.ProfileSurfaceTemp.Attributes     = struct('Name', {'long_name' 'units' 'comment'}, ...
-        'Value', {'Surface temperature estimated from radiosounde profile' ...
+        'Value', {'Surface temperature derived from radiosonde profile' ...
         'K' ...
-        'Surface temperature estimated by interpolating the Payerne radiosonde profile to the station elevation (500 m a.s.l.)'} );
+        'Surface temperature derived by extrapolating the Payerne radiosonde profile to the station elevation (500 m a.s.l.)'} );
     VarCatalogue.ProfileSurfaceTemp.Dimensions     = 'Time';
     VarCatalogue.ProfileSurfaceTemp.Coordinates    = 'Time';
-    VarCatalogue.ProfileSurfaceTemp.SourceName     = 'PrfSrfTemp';
 
     %% Variable TemperatureGradient
     VarCatalogue.TemperatureGradient.Name            = 'TemperatureGradient';
     VarCatalogue.TemperatureGradient.Datatype        = 'double';
     VarCatalogue.TemperatureGradient.Attributes      = struct('Name', {'long_name' 'units' 'description'}, ...
-        'Value', {'Temperature gradient extracted from the slope' ...
+        'Value', {'Temperature gradient derived from the slope' ...
         'K km-1' ...
-        'Temperature gradient close to the surface extracted from the slope of temperature as a function of altitude (in km) between the 2 last considered layers (575 m and 525 m a.s.l.)'} );
+        'Temperature gradient close to the surface derived from the slope of temperature as a function of altitude (in km) between the 2 lowest considered layers (750 m and 500 m a.s.l.)'} );
     VarCatalogue.TemperatureGradient.Dimensions      = 'Time';
     VarCatalogue.TemperatureGradient.Coordinates     = 'Time';
-    VarCatalogue.TemperatureGradient.SourceName      = 'TmpGrdSlp';
 
     %% Variable ProfileSurfacePres
     VarCatalogue.ProfileSurfacePres.Name           = 'ProfileSurfacePres';
@@ -149,7 +138,6 @@ function VarCatalogue = getVariableCatalogue()
         'Surface air pressure estimated by interpolating Payerne radiosonde profile to the station elevation (500 m a.s.l.)'} );
     VarCatalogue.ProfileSurfacePres.Dimensions     = 'Time';
     VarCatalogue.ProfileSurfacePres.Coordinates    = 'Time';
-    VarCatalogue.ProfileSurfacePres.SourceName     = 'PrfSrfPres';
 
     %% Variable LwdInst1
     VarCatalogue.LwdInst1.Name              = 'LwdInst1';
@@ -158,12 +146,11 @@ function VarCatalogue = getVariableCatalogue()
          'Value' , {'surface_net_downward_longwave_flux_assuming_clear_sky' ...
          'Clear-sky surface downwelling longwave irradiance measured by instrument 1', ...
          'W m-2' ...
-         'Average downward longwave irradiance emitted by atmospheric gases and aerosols and received at the Earth surface, measured by instrument 1 under clear-sky conditions.' ...
+         'Average downward longwave irradiance emitted by the atmosphere to the Earth surface measured by instrument 1 during the time selected as clear-sky.' ...
          'Average computed from thirty 60-second measurements acquired during the radiosounding period.' ...
          'Pyrgeometer Eppley PIR'} );
     VarCatalogue.LwdInst1.Dimensions        = 'Time';
     VarCatalogue.LwdInst1.Coordinates       = 'Time';
-    VarCatalogue.LwdInst1.SourceName        = 'Lwd1Avg';
 
     %% Variable LwdInst2
     VarCatalogue.LwdInst2.Name              = 'LwdInst2';
@@ -172,12 +159,11 @@ function VarCatalogue = getVariableCatalogue()
          'Value', {'surface_net_downward_longwave_flux_assuming_clear_sky' ...
          'Clear-sky surface downwelling longwave irradiance measured by instrument 2' ...
          'W m-2' ...
-         'Average downward longwave irradiance emitted by atmospheric gases and aerosols and received at the Earth surface, measured by instrument 2 under clear-sky conditions.' ...
+         'Average downward longwave irradiance emitted by the atmosphere to the Earth surface measured by instrument 2 during the time selected as clear-sky.' ...
          'Average computed from thirty 60-second measurements acquired during the radiosounding period.' ...
          'Pyrgeometer Kipp & Zonen CG4'} );
     VarCatalogue.LwdInst2.Dimensions         = 'Time';
     VarCatalogue.LwdInst2.Coordinates        = 'Time';
-    VarCatalogue.LwdInst2.SourceName         = 'Lwd2Avg';
  
     %% Variable water_vapor
     VarCatalogue.water_vapor.Name          = 'water_vapor';
@@ -189,7 +175,6 @@ function VarCatalogue = getVariableCatalogue()
          'Total amount of water vapour present in a vertical atmospheric column'} );
     VarCatalogue.water_vapor.Dimensions     = 'Time';
     VarCatalogue.water_vapor.Coordinates    = 'Time';
-    VarCatalogue.water_vapor.SourceName     = 'water_vapor';
 
     %% Variable SwDiffuse
     VarCatalogue.SwDiffuse.Name             = 'SwDiffuse';
@@ -202,7 +187,6 @@ function VarCatalogue = getVariableCatalogue()
          'Average computed from thirty 60-second measurements acquired during the radiosounding period.'} );
     VarCatalogue.SwDiffuse.Dimensions       = 'Time';
     VarCatalogue.SwDiffuse.Coordinates      = 'Time';
-    VarCatalogue.SwDiffuse.SourceName       = 'SwDifAvg';
 
     %% Variable SwDirect
     VarCatalogue.SwDirect.Name             = 'SwDirect';
@@ -215,7 +199,6 @@ function VarCatalogue = getVariableCatalogue()
         'Average computed from thirty 60-second measurements acquired during the radiosounding period.'} );
     VarCatalogue.SwDirect.Dimensions       = 'Time';
     VarCatalogue.SwDirect.Coordinates      = 'Time';
-    VarCatalogue.SwDirect.SourceName       = 'SwDirAvg';
 
     %% Variable SwGlobal
     VarCatalogue.SwGlobal.Name             = 'SwGlobal';
@@ -228,7 +211,6 @@ function VarCatalogue = getVariableCatalogue()
         'Average computed from thirty 60-second measurements acquired during the radiosounding period.'} );
     VarCatalogue.SwGlobal.Dimensions       = 'Time';
     VarCatalogue.SwGlobal.Coordinates      = 'Time';
-    VarCatalogue.SwGlobal.SourceName       = 'SwGloAvg';
  
     %% Variable LibRadtranDLR
     VarCatalogue.LibRadtranDLR.Name                  = 'LibRadtranDLR';
@@ -236,11 +218,10 @@ function VarCatalogue = getVariableCatalogue()
     VarCatalogue.LibRadtranDLR.Attributes            = struct('Name', {'long_name' 'units' 'description' 'comment'}, ...
          'Value', {'Downwelling longwave irradiance simulated with libRadtran' ...
          'W m-2' ...
-         'Downward Longwave Radiation (DLR) libRatran model of the flux density of irradiance emitted by the gases and aerosols of the atmosphere to the Earth surface.' ...
+         'Downward Longwave Radiation (DLR) libRatran model of the longwave irradiance emitted by the atmosphere to the Earth surface during the time selected as clear-sky.' ...
          'Computed directly from the Payerne radiosonde profile using libRadtran.'} );
     VarCatalogue.LibRadtranDLR.Dimensions            = 'Time';
     VarCatalogue.LibRadtranDLR.Coordinates           = 'Time';
-    VarCatalogue.LibRadtranDLR.SourceName            = 'edn';
 
     %% Variable ParameterizedDLR
     VarCatalogue.ParameterizedDLR.Name             = 'ParameterizedDLR';
@@ -248,90 +229,82 @@ function VarCatalogue = getVariableCatalogue()
     VarCatalogue.ParameterizedDLR.Attributes       = struct('Name', {'long_name' 'units' 'description' 'comment'}, ...
          'Value', {'Downwelling longwave irradiance at Earth surface estimated by the parametrization of the libRatran DLR model' ...
          'W m-2' ...
-         'Fit estimation of the parametrized Downward Longwave Radiation (DLR) libRatran model of the flux density of irradiance emitted by the gases, aerosols and clouds of the atmosphere to the Earth surface.' ...
+         'Fit estimation of the parametrized Downward Longwave Radiation (DLR) libRatran model of the longwave irradiance emitted by the atmosphere to the Earth surface during the time selected as clear-sky.' ...
          'Computed by fit extrapolation of the profile and therefore independant from radiosounding in Payerne.'} );
     VarCatalogue.ParameterizedDLR.Dimensions       = 'Time';
     VarCatalogue.ParameterizedDLR.Coordinates      = 'Time';
-    VarCatalogue.ParameterizedDLR.SourceName       = 'DLRFtEst';
 
     %% Variable LwdInst1CorrectedIWV
     VarCatalogue.LwdInst1CorrectedIWV.Name          = 'LwdInst1CorrectedIWV';
     VarCatalogue.LwdInst1CorrectedIWV.Datatype      = 'double';
     VarCatalogue.LwdInst1CorrectedIWV.Attributes    = struct('Name', {'long_name' 'units' 'description' 'comment' 'instrument'}, ...
-        'Value', {'IWV-corrected atmospheric downwelling longwave irradiance measured by instrument 1' ...
+        'Value', {'Downwelling longwave irradiance measured by instrument 1 corrected for additional IWV' ...
         'W m-2' ...
         'Atmospheric downwelling longwave irradiance measured by instrument 1 and corrected using a coefficient accounting for the additional contribution of integrated water vapour (IWV).' ...
-        'Correction applied to instrument 1 downwelling longwave irradiance to account for biases related to integrated water vapour (IWV).' ...
+        'Correction applied to instrument 1 downwelling longwave irradiance measurement to account for biases related to integrated water vapour (IWV).' ...
         'Pyrgeometer Eppley PIR'} );
     VarCatalogue.LwdInst1CorrectedIWV.Dimensions    = 'Time';
     VarCatalogue.LwdInst1CorrectedIWV.Coordinates   = 'Time';
-    VarCatalogue.LwdInst1CorrectedIWV.SourceName    = 'CIWVLwd1Avg';
 
     %% Variable LwdInst2CorrectedIWV
     VarCatalogue.LwdInst2CorrectedIWV.Name          = 'LwdInst2CorrectedIWV';
     VarCatalogue.LwdInst2CorrectedIWV.Datatype      = 'double';
     VarCatalogue.LwdInst2CorrectedIWV.Attributes    = struct('Name', {'long_name' 'units' 'description' 'comment' 'instrument'}, ...
-        'Value', {'IWV-corrected atmospheric downwelling longwave irradiance measured by instrument 2' ...
+        'Value', {'Downwelling longwave irradiance measured by instrument 2 corrected for additional IWV' ...
         'W m-2' ...
         'Atmospheric downwelling longwave irradiance measured by instrument 2 and corrected using a coefficient accounting for the additional contribution of integrated water vapour (IWV).' ...
-        'Correction applied to instrument 2 downwelling longwave irradiance to account for biases related to integrated water vapour (IWV).' ...
+        'Correction applied to instrument 2 downwelling longwave irradiance measurement to account for biases related to integrated water vapour (IWV).' ...
         'Pyrgeometer Kipp & Zonen CG4'} );
     VarCatalogue.LwdInst2CorrectedIWV.Dimensions    = 'Time';
     VarCatalogue.LwdInst2CorrectedIWV.Coordinates   = 'Time';
-    VarCatalogue.LwdInst2CorrectedIWV.SourceName    = 'CIWVLwd2Avg';
 
     %% Variable LwdInst1CorrectedSWDif
     VarCatalogue.LwdInst1CorrectedSWDif.Name          = 'LwdInst1CorrectedSWDif';
     VarCatalogue.LwdInst1CorrectedSWDif.Datatype      = 'double';
     VarCatalogue.LwdInst1CorrectedSWDif.Attributes    = struct('Name', {'long_name' 'units' 'description' 'comment' 'instrument'}, ...
-        'Value', {'Diffuse shortwave radiation corrected atmospheric downwelling longwave irradiance measured by instrument 1' ...
+        'Value', {'Downwelling longwave irradiance measured by instrument 1 corrected for additional diffuse shortwave radiation' ...
         'W m-2' ...
         'Atmospheric downwelling longwave irradiance measured by instrument 1 and corrected using a coefficient accounting for the additional contribution of diffused shortwave radiation.' ...
-        'Correction applied to instrument 1 downwelling longwave irradiance to account for biases related to diffused shortwave radiation.' ...
+        'Correction applied to instrument 1 downwelling longwave irradiance measurement to account for biases related to diffused shortwave radiation.' ...
         'Pyrgeometer Eppley PIR'} );
     VarCatalogue.LwdInst1CorrectedSWDif.Dimensions    = 'Time';
     VarCatalogue.LwdInst1CorrectedSWDif.Coordinates   = 'Time';
-    VarCatalogue.LwdInst1CorrectedSWDif.SourceName    = 'CSWdLwd1Avg';
 
     %% Variable LwdInst2CorrectedSWDif
     VarCatalogue.LwdInst2CorrectedSWDif.Name          = 'LwdInst2CorrectedSWDif';
     VarCatalogue.LwdInst2CorrectedSWDif.Datatype      = 'double';
     VarCatalogue.LwdInst2CorrectedSWDif.Attributes    = struct('Name', {'long_name' 'units' 'description' 'comment' 'instrument'}, ...
-        'Value', {'Diffuse shortwave radiation corrected atmospheric downwelling longwave irradiance measured by instrument 2' ...
+        'Value', {'Downwelling longwave irradiance measured by instrument 2 corrected for additional diffuse shortwave radiation' ...
         'W m-2' ...
         'Atmospheric downwelling longwave irradiance measured by instrument 2 and corrected using a coefficient accounting for the additional contribution of diffused shortwave radiation.' ...
-        'Correction applied to instrument 2 downwelling longwave irradiance to account for biases related to diffused shortwave radiation.' ...
+        'Correction applied to instrument 2 downwelling longwave irradiance measurement to account for biases related to diffused shortwave radiation.' ...
         'Pyrgeometer Kipp & Zonen CG4'} );
     VarCatalogue.LwdInst2CorrectedSWDif.Dimensions    = 'Time';
     VarCatalogue.LwdInst2CorrectedSWDif.Coordinates   = 'Time';
-    VarCatalogue.LwdInst2CorrectedSWDif.SourceName    = 'CSWdLwd2Avg';
 
     %% Variable LwdInst1CorrectedIWVSWDif
     VarCatalogue.LwdInst1CorrectedIWVSWDif.Name       = 'LwdInst1CorrectedIWVSWDif';
     VarCatalogue.LwdInst1CorrectedIWVSWDif.Datatype   = 'double';
     VarCatalogue.LwdInst1CorrectedIWVSWDif.Attributes = struct('Name', {'long_name' 'units' 'description' 'comment' 'instrument'}, ...
-        'Value', {'IWV and diffuse shortwave radiation & IWV corrected atmospheric downward longwave irradiance measured by instrument 1' ...
+        'Value', {'Downwelling longwave irradiance measured by instrument 1 corrected for additional IWV and diffuse shortwave radiation & IWV' ...
         'W m-2' ...
         'Atmospheric downwelling longwave irradiance measured by instrument 1 corrected using coefficients accounting for the contributions of integrated water vapour (IWV) and diffuse shortwave radiation.' ...
         'Correction applied using both IWV-dependent and diffuse shortwave radiation-dependent parameterizations developed for this study.' ...
         'Pyrgeometer Eppley PIR'} );
     VarCatalogue.LwdInst1CorrectedIWVSWDif.Dimensions = 'Time';
     VarCatalogue.LwdInst1CorrectedIWVSWDif.Coordinates = 'Time';
-    VarCatalogue.LwdInst1CorrectedIWVSWDif.SourceName = 'CSWdIWVLwd1Avg';
 
     %% Variable LwdInst2CorrectedIWVSWDif
     VarCatalogue.LwdInst2CorrectedIWVSWDif.Name       = 'LwdInst2CorrectedIWVSWDif';
     VarCatalogue.LwdInst2CorrectedIWVSWDif.Datatype   = 'double';
     VarCatalogue.LwdInst2CorrectedIWVSWDif.Attributes = struct('Name', {'long_name' 'units' 'description' 'comment' 'instrument'}, ...
-        'Value', {'IWV and diffuse shortwave radiation & IWV corrected atmospheric downward longwave irradiance measured by instrument 2' ...
+        'Value', {'Downwelling longwave irradiance measured by instrument 2 corrected for additional IWV and diffuse shortwave radiation & IWV' ...
         'W m-2' ...
         'Atmospheric downwelling longwave irradiance measured by instrument 2 corrected using coefficients accounting for the contributions of integrated water vapour (IWV) and diffuse shortwave radiation.' ...
         'Correction applied using both IWV-dependent and diffuse shortwave radiation-dependent parameterizations developed for this study.' ...
         'Pyrgeometer Kipp & Zonen CG4'} );
     VarCatalogue.LwdInst2CorrectedIWVSWDif.Dimensions = 'Time';
     VarCatalogue.LwdInst2CorrectedIWVSWDif.Coordinates = 'Time';
-    VarCatalogue.LwdInst2CorrectedIWVSWDif.SourceName = 'CSWdIWVLwd2Avg';
-
 
     %% Variable SWDifCorrectionCoefDay
     VarCatalogue.SWDifCorrectionCoefDay.Name        = 'SWDifCorrectionCoefDay';
@@ -342,7 +315,6 @@ function VarCatalogue = getVariableCatalogue()
         'Coefficients derived from linear regression and used to account for the additional contribution of diffuse shortwave radiation to the longwave irradiance correction. Derived using daytime observations only.'} );
     VarCatalogue.SWDifCorrectionCoefDay.Dimensions  = 'Coef';
     VarCatalogue.SWDifCorrectionCoefDay.Coordinates = 'Coef';
-    VarCatalogue.SWDifCorrectionCoefDay.SourceName  = 'CoefEstSWdifD';
 
     %% Variable SWDifCorrectionCoefDaySE
     VarCatalogue.SWDifCorrectionCoefDaySE.Name        = 'SWDifCorrectionCoefDaySE';
@@ -353,7 +325,6 @@ function VarCatalogue = getVariableCatalogue()
         'Standard Errors of the coefficients derived from linear regression and used to account for the additional contribution of diffuse shortwave radiation to the longwave irradiance correction. Derived using daytime observations only.'} );
     VarCatalogue.SWDifCorrectionCoefDaySE.Dimensions  = 'Coef';
     VarCatalogue.SWDifCorrectionCoefDaySE.Coordinates = 'Coef';
-    VarCatalogue.SWDifCorrectionCoefDaySE.SourceName  = 'CoefSEsSWdifD';
 
     %% Variable SWDifCorrectionCoefAll
     VarCatalogue.SWDifCorrectionCoefAll.Name        = 'SWDifCorrectionCoefAll';
@@ -364,7 +335,6 @@ function VarCatalogue = getVariableCatalogue()
         'Coefficients derived from linear regression and used to account for the additional contribution of diffuse shortwave radiation to the longwave irradiance correction. Derived using all-time observations.'} );
     VarCatalogue.SWDifCorrectionCoefAll.Dimensions  = 'Coef';
     VarCatalogue.SWDifCorrectionCoefAll.Coordinates = 'Coef';
-    VarCatalogue.SWDifCorrectionCoefAll.SourceName  = 'CoefEstSWdifA';
 
     %% Variable SWDifCorrectionCoefAllSE
     VarCatalogue.SWDifCorrectionCoefAllSE.Name        = 'SWDifCorrectionCoefAllSE';
@@ -375,7 +345,6 @@ function VarCatalogue = getVariableCatalogue()
         'Standard Errors of the coefficients derived from linear regression and used to acount for the additional contribution of diffuse shortwave radiation to the longwave irradiance correction. Derived using all-time observations.'} );
     VarCatalogue.SWDifCorrectionCoefAllSE.Dimensions  = 'Coef';
     VarCatalogue.SWDifCorrectionCoefAllSE.Coordinates = 'Coef';
-    VarCatalogue.SWDifCorrectionCoefAllSE.SourceName  = 'CoefSEsSWdifA';
 
     %% Variable IWVCorrectionCoef
     VarCatalogue.IWVCorrectionCoef.Name           = 'IWVCorrectionCoef';
@@ -386,7 +355,6 @@ function VarCatalogue = getVariableCatalogue()
         'Coefficients derived from linear regression and used to account for the additional contribution of IWV to the longwave irradiance correction.'} );
     VarCatalogue.IWVCorrectionCoef.Dimensions     = 'Coef';
     VarCatalogue.IWVCorrectionCoef.Coordinates    = 'Coef';
-    VarCatalogue.IWVCorrectionCoef.SourceName     = 'CoefEstIWV';
 
     %% Variable IWVCorrectionCoefSE
     VarCatalogue.IWVCorrectionCoefSE.Name           = 'IWVCorrectionCoefSE';
@@ -397,6 +365,5 @@ function VarCatalogue = getVariableCatalogue()
         'Standard Errors of the coefficients derived from linear regression and used to account for the additional contribution of IWV to the longwave irradiance correction.'} );
     VarCatalogue.IWVCorrectionCoefSE.Dimensions     = 'Coef';
     VarCatalogue.IWVCorrectionCoefSE.Coordinates    = 'Coef';
-    VarCatalogue.IWVCorrectionCoefSE.SourceName     = 'CoefSEsIWV';
 
 end

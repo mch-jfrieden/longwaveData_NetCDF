@@ -30,21 +30,27 @@ function GlobalStruct = getGlobalMetadata()
     GlobalStruct(11).Value      = 'BSRN station no: 21; Surface type: cultivated; Topography type: hilly, rural';
 
     GlobalStruct(12).Name       = 'Conventions';
-    GlobalStruct(12).Value      = 'CF-1.11 ACDD-1.3';
-    GlobalStruct(13).Name       = 'Instruments';
-    GlobalStruct(13).Value      = 'Instrument 1: Eppley PIR / Instrument 2: Kipp & Zonen CG4 pyrgeometer';
-    GlobalStruct(14).Name       = 'License';
-    GlobalStruct(14).Value      = 'Baseline Surface Radiation Network License 1.0 (BSRN-1.0)';
+    GlobalStruct(12).Value      = 'CF-1.11';
+    GlobalStruct(13).Name       = 'standard_name_vocabulary';
+    GlobalStruct(13).Value      = 'CF Standard Name Table';
+    GlobalStruct(14).Name       = 'variable_definition_vocabulary';
+    GlobalStruct(14).Value      = 'WMO OSCAR (Observing Systems Capability Analysis and Review tool)';
+    GlobalStruct(15).Name       = 'Instruments';
+    GlobalStruct(15).Value      = 'Instrument 1: Pyrgeometer Eppley PIR / Instrument 2: Pyrgeometer Kipp & Zonen CG4';
+    GlobalStruct(16).Name       = 'License';
+    GlobalStruct(16).Value      = 'Creative Commons Attribution 4.0 International (CC BY 4.0)';
+    GlobalStruct(17).Name       = 'License_url';
+    GlobalStruct(17).Value      = 'https://creativecommons.org/licenses/by/4.0/';
 
-    GlobalStruct(15).Name       = 'History';
-    GlobalStruct(15).Value      = 'Created from 1-minute averaged measurements and themselves averages on 30 minutes. Only clear-sky is present in this documentation.';
+    GlobalStruct(18).Name       = 'History';
+    GlobalStruct(18).Value      = 'Created from 1-minute averaged measurements and themselves averages on 30 minutes. Only clear-sky is present in this documentation.';
     
-    GlobalStruct(16).Name       = 'Time coverage start';
-    GlobalStruct(16).Value      = '01-01-2011 00:00:00';
-    GlobalStruct(17).Name       = 'Time coverage end';
-    GlobalStruct(17).Value      = '01-01-2026 00:00:00';
-    GlobalStruct(18).Name       = 'Creation date';
-    GlobalStruct(18).Value      = '01-01-2026 00:00:00';
+    GlobalStruct(19).Name       = 'Time coverage start';
+    GlobalStruct(19).Value      = '01-01-2011 00:00:00';
+    GlobalStruct(20).Name       = 'Time coverage end';
+    GlobalStruct(20).Value      = '01-01-2026 00:00:00';
+    GlobalStruct(21).Name       = 'Creation date';
+    GlobalStruct(21).Value      = '01-01-2026 00:00:00';
 
 
     
